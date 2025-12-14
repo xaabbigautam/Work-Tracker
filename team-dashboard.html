@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Dashboard - Task Tracking System</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1><i class="fas fa-tasks"></i> Team Dashboard</h1>
+                <p>Welcome to the Task Management Portal</p>
+            </div>
+            <div class="user-info" id="userInfo">
+                <!-- User info will be loaded dynamically -->
+            </div>
+        </header>
+
+        <div class="dashboard">
+            <!-- Sidebar -->
+            <nav class="sidebar">
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active" data-view="my-tasks"><i class="fas fa-list-check"></i> My Tasks</a></li>
+                    <li><a href="#" data-view="request-task"><i class="fas fa-plus-circle"></i> Request New Task</a></li>
+                    <li><a href="#" data-view="completed-tasks"><i class="fas fa-check-circle"></i> Completed Tasks</a></li>
+                    <li><a href="#" data-view="stats"><i class="fas fa-chart-bar"></i> Statistics</a></li>
+                    <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Alert Area -->
+                <div id="alertArea"></div>
+
+                <!-- My Tasks View -->
+                <div id="my-tasks-view" class="view active">
+                    <div class="view-header">
+                        <h2><i class="fas fa-list-check"></i> My Tasks</h2>
+                        <button class="btn btn-primary" onclick="refreshTasks()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="task-table" id="tasksTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Zone</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Approved By</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tasksTableBody">
+                                <!-- Tasks will be loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Request Task View -->
+                <div id="request-task-view" class="view" style="display: none;">
+                    <div class="view-header">
+                        <h2><i class="fas fa-plus-circle"></i> Request New Task</h2>
+                    </div>
+                    <form id="requestTaskForm">
+                        <div class="form-group">
+                            <label for="taskTitle">Task Title *</label>
+                            <input type="text" id="taskTitle" class="form-control" placeholder="Enter task title" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="taskDescription">Description *</label>
+                            <textarea id="taskDescription" class="form-control" rows="4" placeholder="Describe the task in detail" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="taskZone">Zone *</label>
+                            <select id="taskZone" class="zone-select" required>
+                                <option value="">Select Zone</option>
+                                <option value="Main Villa">Main Villa</option>
+                                <option value="Main SPA">Main SPA</option>
+                                <option value="Mountain Villa">Mountain Villa</option>
+                                <option value="Entourage">Entourage</option>
+                                <option value="Pool House">Pool House</option>
+                                <option value="Gate 3">Gate 3</option>
+                                <option value="Golf Landscaping">Golf Landscaping</option>
+                                <option value="Areesh">Areesh</option>
+                                <option value="MUD 1">MUD 1</option>
+                                <option value="MUD 2">MUD 2</option>
+                                <option value="MUD 3">MUD 3</option>
+                                <option value="MUD 4">MUD 4</option>
+                                <option value="MUD 5">MUD 5</option>
+                                <option value="MUD 6">MUD 6</option>
+                                <option value="Paddle Court">Paddle Court</option>
+                                <option value="Gaming Building">Gaming Building</option>
+                                <option value="Indian Palace Front">Indian Palace Front</option>
+                                <option value="Indian Palace back">Indian Palace back</option>
+                                <option value="Royal Caravan">Royal Caravan</option>
+                                <option value="Cycle Track">Cycle Track</option>
+                                <option value="POD 1 Indoor">POD 1 Indoor</option>
+                                <option value="POD 1 Out door">POD 1 Outdoor</option>
+                                <option value="Royal Road">Royal Road</option>
+                                <option value="Gate 5">Gate 5</option>
+                                <option value="VIP Hotel">VIP Hotel</option>
+                                <option value="Staff Canteen Z1">Staff Canteen Z1</option>
+                                <option value="Staff Canteen Z2">Staff Canteen Z2</option>
+                                <option value="Staff Canteen Z3">Staff Canteen Z3</option>
+                                <option value="Other">Other Area</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="taskPriority">Priority</label>
+                            <select id="taskPriority" class="form-control">
+                                <option value="normal">Normal</option>
+                                <option value="high">High</option>
+                                <option value="urgent">Urgent</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dueDate">Due Date (Optional)</label>
+                            <input type="date" id="dueDate" class="form-control">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-paper-plane"></i> Submit Task Request
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Completed Tasks View -->
+                <div id="completed-tasks-view" class="view" style="display: none;">
+                    <div class="view-header">
+                        <h2><i class="fas fa-check-circle"></i> Completed Tasks</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="task-table" id="completedTasksTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Zone</th>
+                                    <th>Completed On</th>
+                                    <th>Remarks</th>
+                                    <th>Approved By</th>
+                                </tr>
+                            </thead>
+                            <tbody id="completedTasksBody">
+                                <!-- Completed tasks will be loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Statistics View -->
+                <div id="stats-view" class="view" style="display: none;">
+                    <div class="view-header">
+                        <h2><i class="fas fa-chart-bar"></i> My Statistics</h2>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="stat-number" id="totalTasks">0</div>
+                            <div class="stat-label">Total Tasks</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-number" id="pendingTasks">0</div>
+                            <div class="stat-label">Pending</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-spinner"></i>
+                            </div>
+                            <div class="stat-number" id="inProgressTasks">0</div>
+                            <div class="stat-label">In Progress</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-number" id="completedTasks">0</div>
+                            <div class="stat-label">Completed</div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Task Details Modal -->
+    <div class="modal" id="taskDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Task Details</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="taskDetailsContent">
+                <!-- Task details will be loaded here -->
+            </div>
+            <div class="modal-footer" id="taskModalFooter">
+                <!-- Action buttons will be added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Complete Task Modal -->
+    <div class="modal" id="completeTaskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Complete Task</h2>
+                <button class="modal-close" onclick="closeCompleteModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="completeTaskForm">
+                    <div class="form-group">
+                        <label for="completionRemarks">Remarks *</label>
+                        <textarea id="completionRemarks" class="form-control" rows="4" placeholder="Add completion remarks" required></textarea>
+                    </div>
+                    <input type="hidden" id="taskToCompleteId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeCompleteModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="submitCompletion()">Mark as Complete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/team-dashboard.js"></script>
+</body>
+</html>
